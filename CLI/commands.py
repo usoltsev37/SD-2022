@@ -5,54 +5,52 @@ from typing import List
 
 class Command(ABC):
     @abstractmethod
-    def __init__(self, stdin, stdout):
-        self.stdin = stdin
-        self.stdout = stdout
+    def __init__(self, args: list):
+        self.stdout = None
+        self.stdin = None
 
     @abstractmethod
-    def execute(self):
+    def execute(self, stdin, stdout):
         pass
 
 
 class Cat(Command):
-    def __init__(self, stdin, stdout, arg: str):
-        self.stdin = stdin
-        self.stdout = stdout
-        self.arg = arg
-
-    def cat(self, lines):
-        for line in lines:
-            print(line, file=self.stdout, end='')
+    def __init__(self, args: list):
+        self.arg = args[0] if len(args) > 0 else None
 
     def cat_file(self, filename: str):
         try:
-            with open(filename) as file:
-                self.cat(file)
-        except:
+            with open(filename) as lines:
+                for line in lines:
+                    print(line, file=self.stdout, end='')
+        except FileNotFoundError:
             print(f'cat: {filename}: No such file or directory')
 
-    def execute(self):
+    def execute(self, stdin, stdout):
+        self.stdin = stdin
+        self.stdout = stdout
         if not self.arg:
-            self.cat(self.stdin)
+            self.cat_file(self.stdin.read().strip())
         else:
             self.cat_file(self.arg)
 
 
 class Echo(Command):
-    def __init__(self, stdin, stdout, args: List[str]):
-        self.stdin = stdin
-        self.stdout = stdout
+    def __init__(self, args: List[str]):
         self.args = args
 
-    def execute(self):
-        print(*self.args, file=self.stdout)
+    def execute(self, stdin, stdout):
+        self.stdin = stdin
+        self.stdout = stdout
+        if len(self.args) != 0:
+            print(*self.args, file=self.stdout, end='')
+        else:
+            print(self.stdin.read(), file=self.stdout, end='')
 
 
 class Wc(Command):
-    def __init__(self, stdin, stdout, arg):
-        self.stdin = stdin
-        self.stdout = stdout
-        self.arg = arg
+    def __init__(self, args):
+        self.arg = args[0] if len(args) > 0 else None
 
     def wc(self, lines):
         lines_cnt = 0
@@ -69,10 +67,12 @@ class Wc(Command):
             with open(filename) as file:
                 result = self.wc(file)
                 print(*result, filename, file=self.stdout)
-        except:
+        except FileNotFoundError:
             print(f'wc: {filename}: No such file or directory')
 
-    def execute(self):
+    def execute(self, stdin, stdout):
+        self.stdin = stdin
+        self.stdout = stdout
         if not self.arg:
             self.wc(self.stdin)
         else:
@@ -80,36 +80,40 @@ class Wc(Command):
 
 
 class Pwd(Command):
-    def __init__(self, stdin, stdout):
+    def __init__(self, args):
+        pass
+
+    def execute(self, stdin, stdout):
         self.stdin = stdin
         self.stdout = stdout
-
-    def execute(self):
         print(getcwd(), file=self.stdout)
 
 
 class Exit(Command):
-    def __init__(self, stdin, stdout):
+    def __init__(self, args):
+        pass
+
+    def execute(self, stdin, stdout):
         self.stdin = stdin
         self.stdout = stdout
-
-    def execute(self):
         pass
 
 
 class Declaration(Command):
-    def __init__(self, stdin, stdout):
+    def __init__(self, args):
+        pass
+
+    def execute(self, stdin, stdout):
         self.stdin = stdin
         self.stdout = stdout
-
-    def execute(self):
         pass
 
 
 class External(Command):
-    def __init__(self, stdin, stdout):
+    def __init__(self, args):
+        pass
+
+    def execute(self, stdin, stdout):
         self.stdin = stdin
         self.stdout = stdout
-
-    def execute(self):
         pass
