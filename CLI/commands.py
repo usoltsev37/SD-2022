@@ -128,7 +128,7 @@ class Declaration(Command):
 class External(Command):
     """Class which represents external command"""
     def __init__(self, args):
-        if len(args) > 0:
+        if len(args) == 0:
             raise AttributeError("External: command expected")
         self.command = args[0]
         self.args = args[1:]
