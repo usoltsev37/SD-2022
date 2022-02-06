@@ -3,6 +3,8 @@ from os import getcwd
 from typing import List
 import subprocess
 
+from CLI.token_types import Token
+
 
 class Command(ABC):
     """Abstract class command. Each command is inherited from this class"""
@@ -46,6 +48,8 @@ class Cat(Command):
         :return: None
         """
         try:
+            if type(filename) == Token:
+                filename = filename.value
             with open(filename) as lines:
                 for line in lines:
                     print(line, file=self.stdout, end='')
