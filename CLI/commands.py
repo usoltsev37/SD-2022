@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from os import getcwd
 from typing import List
+import subprocess
 
 
 class Command(ABC):
@@ -96,24 +97,27 @@ class Exit(Command):
     def execute(self, stdin, stdout):
         self.stdin = stdin
         self.stdout = stdout
-        pass
+        raise SystemExit("CLI exit")
 
 
 class Declaration(Command):
     def __init__(self, args):
-        pass
+        self.dct = args[0]
+        self.name = args[1]
+        self.value = args[2]
 
     def execute(self, stdin, stdout):
         self.stdin = stdin
         self.stdout = stdout
-        pass
+        self.dct[self.name] = self.value
 
 
 class External(Command):
-    def __init__(self, args):
-        pass
+    def __init__(self, command, args):
+        self.command = command
+        self.args = args
 
     def execute(self, stdin, stdout):
         self.stdin = stdin
         self.stdout = stdout
-        pass
+        return subprocess.call([self.command, self.args], stdin=self.stdin, stdout=self.stdout)

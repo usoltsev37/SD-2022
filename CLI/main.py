@@ -13,6 +13,7 @@ class CLI:
 
     def substitution(self, token):
         if token.type == Type.SUBSTITUTION:
+            print(self.vars.get(token.value, ''))
             return Token(self.vars.get(token.value, ''), Type.CLEAN_STRING)
         elif token.type == Type.STRING:
             new_str = ''
@@ -43,7 +44,7 @@ class CLI:
         com_name = tokens[0].value
         args = [i.value for i in tokens[1:]]
         if com_name not in d:
-            return commands.External([self.vars] + args)
+            return commands.External(com_name, [self.vars] + args)
         else:
             return d[com_name](args)
 
@@ -63,24 +64,29 @@ class CLI:
         begin = pos
         while pos < len(tokens):
             if tokens[pos].type == Type.PIPE or tokens[pos].type == Type.END:
-                command = self.parseCommand(tokens[begin:pos])
-                command.execute(io_in, io_out)
-                io_in = io_out
-                io_in.seek(0, 0)
-                io_out = io.StringIO()
-                begin = pos + 1
+                if len(tokens[begin:pos]) > 0:
+                    command = self.parseCommand(tokens[begin:pos])
+                    command.execute(io_in, io_out)
+                    io_in = io_out
+                    io_in.seek(0, 0)
+                    io_out = io.StringIO()
+                    begin = pos + 1
             pos += 1
         stdout.write(io_in.read())
         stdout.write('\n')
 
 
 if __name__ == '__main__':
-    cli = CLI()
-    print('> ', end='')
-    sys.stdout.flush()
-    for line in sys.stdin:
-        line = line.rstrip('\n')
-        if line != '':
-            cli.process(line, sys.stdin, sys.stdout)
+    try:
+        cli = CLI()
         print('> ', end='')
         sys.stdout.flush()
+        for line in sys.stdin:
+            line = line.rstrip('\n')
+            if line != '':
+                cli.process(line, sys.stdin, sys.stdout)
+            print('> ', end='')
+            sys.stdout.flush()
+    except SystemExit as exc:
+        print("CLI exit")
+
