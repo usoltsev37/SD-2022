@@ -23,3 +23,9 @@ class Token:
 
     def __repr__(self):
         return f'{self.type}({self.value})'
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.value == other.value and self.type == other.type
+        else:
+            return False
