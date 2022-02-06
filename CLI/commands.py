@@ -19,6 +19,8 @@ class Command(ABC):
 class Cat(Command):
     """Class which represents cat command"""
     def __init__(self, args: list):
+        if len(args) > 1:
+            raise AttributeError("Too many arguments")
         self.arg = args[0] if len(args) > 0 else None
 
     def cat_file(self, filename: str):
@@ -55,6 +57,8 @@ class Echo(Command):
 class Wc(Command):
     """Class which represents wc command"""
     def __init__(self, args):
+        if len(args) > 1:
+            raise AttributeError("Too many arguments")
         self.arg = args[0] if len(args) > 0 else None
 
     def wc(self, lines):
@@ -109,6 +113,8 @@ class Exit(Command):
 class Declaration(Command):
     """Class which represents declaration command"""
     def __init__(self, args):
+        if len(args) != 3:
+            raise AttributeError("Declaration class needs 3 arguments")
         self.dct = args[0]
         self.name = args[1]
         self.value = args[2]
