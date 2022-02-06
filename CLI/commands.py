@@ -5,6 +5,7 @@ import subprocess
 
 
 class Command(ABC):
+    """Abstract class command. Each command is inherited from this class"""
     @abstractmethod
     def __init__(self, args: list):
         self.stdout = None
@@ -16,7 +17,10 @@ class Command(ABC):
 
 
 class Cat(Command):
+    """Class which represents cat command"""
     def __init__(self, args: list):
+        if len(args) > 1:
+            raise AttributeError("Too many arguments")
         self.arg = args[0] if len(args) > 0 else None
 
     def cat_file(self, filename: str):
@@ -37,6 +41,7 @@ class Cat(Command):
 
 
 class Echo(Command):
+    """Class which represents echo command"""
     def __init__(self, args: List[str]):
         self.args = args
 
@@ -50,7 +55,10 @@ class Echo(Command):
 
 
 class Wc(Command):
+    """Class which represents wc command"""
     def __init__(self, args):
+        if len(args) > 1:
+            raise AttributeError("Too many arguments")
         self.arg = args[0] if len(args) > 0 else None
 
     def wc(self, lines):
@@ -81,6 +89,7 @@ class Wc(Command):
 
 
 class Pwd(Command):
+    """Class which represents pwd command"""
     def __init__(self, args):
         pass
 
@@ -91,6 +100,7 @@ class Pwd(Command):
 
 
 class Exit(Command):
+    """Class which represents exit command"""
     def __init__(self, args):
         pass
 
@@ -101,7 +111,10 @@ class Exit(Command):
 
 
 class Declaration(Command):
+    """Class which represents declaration command"""
     def __init__(self, args):
+        if len(args) != 3:
+            raise AttributeError("Declaration class needs 3 arguments")
         self.dct = args[0]
         self.name = args[1]
         self.value = args[2]
@@ -113,6 +126,7 @@ class Declaration(Command):
 
 
 class External(Command):
+    """Class which represents external command"""
     def __init__(self, args):
         if len(args) > 0:
             raise AttributeError("External: command expected")
