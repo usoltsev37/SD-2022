@@ -13,7 +13,8 @@ class CLI:
         self.vars = {}
 
     def substitution(self, token: Token) -> Token:
-        """Performs variable substitution in the token, if it exists
+        """
+        Performs variable substitution in the token, if it exists
         For SUBSTITUTION and STRING tokens, substitution of all variables is performed
         :param token: Token of any type
         :return: A token of the CLEAN_STRING type
@@ -40,7 +41,8 @@ class CLI:
             return token
 
     def parseCommand(self, tokens: List[Token]) -> Command:
-        """Converts a token to a command
+        """
+        Converts a token to a command
         :param tokens: tokens of type CLEAN_STRING
         :return Command Instance
         :raise AttributeError: invalid arguments for the command
@@ -60,7 +62,8 @@ class CLI:
             return d[com_name](args)
 
     def process(self, line: str, stdin: Any, stdout: Any):
-        """Executes the passed command
+        """
+        Executes the passed command
         :param line: str - the command to be executed
         :param stdin: the file object to be used as input for the command
         :param stdout: the file object to be used as the output for the command

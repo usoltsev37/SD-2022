@@ -17,7 +17,8 @@ class Parser:
     ])
 
     def __init__(self, string: str):
-        """Parser Constructor
+        """
+        Parser Constructor
         :param string: line for parsing
         """
         self.string = string + chr(0)
@@ -32,7 +33,8 @@ class Parser:
             self.pos += 1
 
     def next_token(self) -> Token:
-        """Parses the first token in the string.
+        """
+        Parses the first token in the string.
         Skips leading spaces from the current position and parse the token
         :return: Next parsed token
         :raise AssertionError: if the token cannot be parsed
@@ -56,7 +58,8 @@ class Parser:
         raise AssertionError(f'Token not found, unparsed: "{self.string[self.pos:]}"')
 
     def parse(self) -> List[Token]:
-        """Parse all line
+        """
+        Parse all line
         :return: List of parsed tokens
         :raise AssertionError: if the token cannot be parsed
         """
@@ -66,4 +69,3 @@ class Parser:
             val = self.next_token()
             res.append(val)
         return res
-

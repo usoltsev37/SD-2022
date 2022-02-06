@@ -43,6 +43,7 @@ class Cat(Command):
         Print the content of the given file into output stream
         :param filename: name of the file
         :raise FileNotFoundError if the given file cannot be found
+        :return: None
         """
         try:
             with open(filename) as lines:
@@ -56,6 +57,7 @@ class Cat(Command):
         Function executes cat command
         :param stdin: input stream
         :param stdout: output stream
+        :return: None
         """
         self.stdin = stdin
         self.stdout = stdout
@@ -80,6 +82,7 @@ class Echo(Command):
         Function executes echo command
         :param stdin: input stream
         :param stdout: output stream
+        :return: None
         """
         self.stdin = stdin
         self.stdout = stdout
@@ -122,6 +125,7 @@ class Wc(Command):
         Functuon that calculates total number of lines, words and bytes in the given file
         :param filename: name of the file
         :raise FileNotFoundError if the given file cannot be found
+        :return: None
         """
         try:
             with open(filename) as file:
@@ -135,6 +139,7 @@ class Wc(Command):
         Function executes wc command
         :param stdin: input stream
         :param stdout: output stream
+        :return: None
         """
         self.stdin = stdin
         self.stdout = stdout
@@ -155,6 +160,7 @@ class Pwd(Command):
         Function executes pwd command
         :param stdin: input stream
         :param stdout: output stream
+        :return: None
         """
         self.stdin = stdin
         self.stdout = stdout
@@ -173,6 +179,7 @@ class Exit(Command):
         :param stdin: input stream
         :param stdout: output stream
         :raise SystemExit exception
+        :return: None
         """
         self.stdin = stdin
         self.stdout = stdout
@@ -199,6 +206,7 @@ class Declaration(Command):
         Function executes declaration command
         :param stdin: input stream
         :param stdout: output stream
+        :return: None
         """
         self.stdin = stdin
         self.stdout = stdout
