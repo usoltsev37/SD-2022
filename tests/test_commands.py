@@ -7,8 +7,8 @@ from CLI.token_types import Token, Type
 
 def test_cat():
     cli = CLI()
-    tokens = [Token("cat", Type.STRING), Token("main.py", Type.STRING), Token(chr(0), Type.END)]
-    cli.parseCommand(tokens) == Cat("main.py")
+    tokens = [Token("cat", Type.STRING), Token("main.py", Type.STRING)]
+    cli.parseCommand(tokens) == Cat(["main.py"])
 
 
 def test_echo_one_argument():
@@ -37,8 +37,8 @@ def test_execute_echo():
 
 def test_wc_file():
     cli = CLI()
-    tokens = [Token("wc", Type.STRING), Token("main.py", Type.STRING), Token(chr(0), Type.END)]
-    cli.parseCommand(tokens) == Wc("main.py")
+    tokens = [Token("wc", Type.STRING), Token("main.py", Type.STRING)]
+    cli.parseCommand(tokens) == Wc(["main.py"])
 
 
 def test_pwd():
