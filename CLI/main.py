@@ -53,7 +53,7 @@ class CLI:
         io_in = stdin
         io_out = io.StringIO()
         pos = 0
-        if pos == 0 and tokens[pos + 1].type == Type.DECLARATION:
+        if pos == 0 and len(tokens) >= 3 and tokens[pos + 1].type == Type.DECLARATION:
             command = commands.Declaration([self.vars, tokens[pos], tokens[pos + 2]])
             command.execute(io_in, io_out)
             io_in = io_out
@@ -77,7 +77,10 @@ class CLI:
 if __name__ == '__main__':
     cli = CLI()
     print('> ', end='')
+    sys.stdout.flush()
     for line in sys.stdin:
         line = line.rstrip('\n')
-        cli.process(line, sys.stdin, sys.stdout)
+        if line != '':
+            cli.process(line, sys.stdin, sys.stdout)
         print('> ', end='')
+        sys.stdout.flush()
