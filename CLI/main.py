@@ -20,7 +20,6 @@ class CLI:
         :return: A token of the CLEAN_STRING type
         """
         if token.type == Type.SUBSTITUTION:
-            print(self.vars.get(token.value, ''))
             return Token(self.vars.get(token.value, ''), Type.CLEAN_STRING)
         elif token.type == Type.STRING:
             new_str = ''
@@ -72,6 +71,7 @@ class CLI:
         """
         parser = Parser(line)
         tokens = [self.substitution(t) for t in parser.parse()]
+        print(tokens)
         io_in = stdin
         io_out = io.StringIO()
         pos = 0

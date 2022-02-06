@@ -210,7 +210,7 @@ class Declaration(Command):
         """
         self.stdin = stdin
         self.stdout = stdout
-        self.dct[self.name] = self.value
+        self.dct[self.name.value] = self.value.value
 
 
 class External(Command):
