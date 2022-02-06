@@ -113,9 +113,11 @@ class Declaration(Command):
 
 
 class External(Command):
-    def __init__(self, command, args):
-        self.command = command
-        self.args = args
+    def __init__(self, args):
+        if len(args) > 0:
+            raise AttributeError("External: command expected")
+        self.command = args[0]
+        self.args = args[1:]
 
     def execute(self, stdin, stdout):
         self.stdin = stdin
