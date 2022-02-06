@@ -3,8 +3,6 @@ from os import getcwd
 from typing import List
 import subprocess
 
-from CLI.token_types import Token
-
 
 class Command(ABC):
     """Abstract class command. Each command is inherited from this class"""
@@ -48,8 +46,6 @@ class Cat(Command):
         :return: None
         """
         try:
-            if type(filename) == Token:
-                filename = filename.value
             with open(filename) as lines:
                 for line in lines:
                     print(line, file=self.stdout, end='')
@@ -134,7 +130,7 @@ class Wc(Command):
         try:
             with open(filename) as file:
                 result = self.wc(file)
-                print(*result, filename, file=self.stdout)
+                print(*result, filename, file=self.stdout, end='')
         except FileNotFoundError:
             print(f'wc: {filename}: No such file or directory')
 
@@ -168,7 +164,7 @@ class Pwd(Command):
         """
         self.stdin = stdin
         self.stdout = stdout
-        print(getcwd(), file=self.stdout)
+        print(getcwd(), file=self.stdout, end='')
 
 
 class Exit(Command):
@@ -214,7 +210,7 @@ class Declaration(Command):
         """
         self.stdin = stdin
         self.stdout = stdout
-        self.dct[self.name.value] = self.value.value
+        self.dct[self.name] = self.value
 
 
 class External(Command):
@@ -239,4 +235,4 @@ class External(Command):
         """
         self.stdin = stdin
         self.stdout = stdout
-        return subprocess.call([self.command, self.args], stdin=self.stdin, stdout=self.stdout)
+        return subprocess.call([self.command, *self.args], stdin=self.stdin, stdout=self.stdout)

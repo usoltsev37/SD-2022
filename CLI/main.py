@@ -15,13 +15,11 @@ class CLI:
     def substitution(self, token: Token) -> Token:
         """
         Performs variable substitution in the token, if it exists
-        For SUBSTITUTION and STRING tokens, substitution of all variables is performed
+        For STRING tokens, substitution of all variables is performed
         :param token: Token of any type
         :return: A token of the CLEAN_STRING type
         """
-        if token.type == Type.SUBSTITUTION:
-            return Token(self.vars.get(token.value, ''), Type.CLEAN_STRING)
-        elif token.type == Type.STRING:
+        if token.type == Type.STRING:
             new_str = ''
             pattern = re.compile(r'\$[a-zA-Z_][\w]*')
             pos = 0
@@ -71,17 +69,13 @@ class CLI:
         """
         parser = Parser(line)
         tokens = [self.substitution(t) for t in parser.parse()]
-        print(tokens)
+        if len(tokens) >= 3 and tokens[1].type == Type.DECLARATION:
+            command = commands.Declaration([self.vars, tokens[0].value, tokens[2].value])
+            command.execute(stdin, stdout)
+            return
         io_in = stdin
         io_out = io.StringIO()
         pos = 0
-        if pos == 0 and len(tokens) >= 3 and tokens[pos + 1].type == Type.DECLARATION:
-            command = commands.Declaration([self.vars, tokens[pos], tokens[pos + 2]])
-            command.execute(io_in, io_out)
-            io_in = io_out
-            io_in.seek(0, 0)
-            io_out = io.StringIO()
-            pos += 3
         begin = pos
         while pos < len(tokens):
             if tokens[pos].type == Type.PIPE or tokens[pos].type == Type.END:
@@ -113,4 +107,3 @@ if __name__ == '__main__':
             sys.stdout.flush()
     except SystemExit as exc:
         print("CLI exit")
-

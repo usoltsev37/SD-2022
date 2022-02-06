@@ -63,4 +63,4 @@ def test_declaration():
     cli.process(line, stdin, stdout)
     stdout.seek(0, 0)
     result = stdout.read()
-    assert result == "\n5\n"
+    assert result == "5\n"

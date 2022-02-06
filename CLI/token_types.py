@@ -7,7 +7,6 @@ class Type(Enum):
     """
     STRING = 1
     CLEAN_STRING = 2
-    SUBSTITUTION = 3
     DECLARATION = 4
     PIPE = 5
     END = 6

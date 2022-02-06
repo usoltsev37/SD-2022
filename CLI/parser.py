@@ -10,9 +10,8 @@ class Parser:
     tokens = OrderedDict([
         (Type.PIPE, r'\|'),
         (Type.DECLARATION, r'='),
-        (Type.SUBSTITUTION, r'\$[a-zA-Z_][\w\-]*'),
         (Type.CLEAN_STRING, r'\'[^\']*\''),
-        (Type.STRING, r'(\"[^\"]*\")|([\w\-\.\!\@\?\#\$\%\^\&\*\(\)\-\+]+)'),
+        (Type.STRING, r'(\"[^\"]*\")|([\w\-\.\!\@\?\#\$\%\^\&\/\*\(\)\-\+]+)'),
         (Type.END, chr(0))
     ])
 
@@ -44,9 +43,7 @@ class Parser:
             match = re.match(value, self.string[self.pos:])
             if match is not None:
                 self.pos = self.pos + match.end()
-                if key == Type.SUBSTITUTION:
-                    res = match.group(0)[1:]
-                elif key == Type.CLEAN_STRING:
+                if key == Type.CLEAN_STRING:
                     res = match.group(0)[1:-1]
                 elif key == Type.STRING:
                     res = match.group(0)
