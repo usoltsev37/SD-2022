@@ -64,3 +64,9 @@ def test_parse_quotes():
     parser = Parser(line)
     expected_result = [Token("cat", Type.STRING), Token("file.txt", Type.STRING), Token(chr(0), Type.END)]
     assert parser.parse() == expected_result
+
+
+def test_token_methods():
+    token = Token("echo", Type.STRING)
+    assert token.getValue() == "echo"
+    assert token.getType() == Type.STRING

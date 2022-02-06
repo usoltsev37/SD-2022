@@ -1,7 +1,8 @@
 import io
 
+import pytest as pytest
 from CLI.main import CLI
-from CLI.commands import Echo, Cat, Wc, Pwd, Exit, Declaration
+from CLI.commands import Echo, Cat, Wc, Pwd, Exit
 from CLI.token_types import Token, Type
 
 
@@ -9,6 +10,17 @@ def test_cat():
     cli = CLI()
     tokens = [Token("cat", Type.STRING), Token("main.py", Type.STRING)]
     cli.parseCommand(tokens) == Cat(["main.py"])
+
+
+def test_execute_cat():
+    cli = CLI()
+    stdin = io.StringIO()
+    stdout = io.StringIO()
+    line = "cat tests/file.txt"
+    cli.process(line, stdin, stdout)
+    stdout.seek(0, 0)
+    result = stdout.read()
+    assert result == "Hello world!\n"
 
 
 def test_echo_one_argument():
@@ -41,6 +53,17 @@ def test_wc_file():
     cli.parseCommand(tokens) == Wc(["main.py"])
 
 
+def test_execute_wc():
+    cli = CLI()
+    stdin = io.StringIO()
+    stdout = io.StringIO()
+    line = "wc tests/file.txt"
+    cli.process(line, stdin, stdout)
+    stdout.seek(0, 0)
+    result = stdout.read()
+    assert result == "1 2 12 tests/file.txt\n"
+
+
 def test_pwd():
     cli = CLI()
     tokens = [Token("pwd", Type.STRING), Token(chr(0), Type.END)]
@@ -51,6 +74,15 @@ def test_exit():
     cli = CLI()
     tokens = [Token("exit", Type.STRING), Token(chr(0), Type.END)]
     cli.parseCommand(tokens) == Exit([])
+
+
+def test_execute_exit():
+    with pytest.raises(SystemExit):
+        cli = CLI()
+        stdin = io.StringIO()
+        stdout = io.StringIO()
+        line = "exit"
+        cli.process(line, stdin, stdout)
 
 
 def test_declaration():
