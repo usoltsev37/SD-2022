@@ -4,6 +4,8 @@ import re
 
 
 class Parser:
+    """Class for parsing the string"""
+
     tokens = OrderedDict([
         (Type.PIPE, r'\|'),
         (Type.DECLARATION, r'='),

@@ -5,6 +5,7 @@ import subprocess
 
 
 class Command(ABC):
+    """Abstract class command. Each command is inherited from this class"""
     @abstractmethod
     def __init__(self, args: list):
         self.stdout = None
@@ -16,6 +17,7 @@ class Command(ABC):
 
 
 class Cat(Command):
+    """Class which represents cat command"""
     def __init__(self, args: list):
         self.arg = args[0] if len(args) > 0 else None
 
@@ -37,6 +39,7 @@ class Cat(Command):
 
 
 class Echo(Command):
+    """Class which represents echo command"""
     def __init__(self, args: List[str]):
         self.args = args
 
@@ -50,6 +53,7 @@ class Echo(Command):
 
 
 class Wc(Command):
+    """Class which represents wc command"""
     def __init__(self, args):
         self.arg = args[0] if len(args) > 0 else None
 
@@ -81,6 +85,7 @@ class Wc(Command):
 
 
 class Pwd(Command):
+    """Class which represents pwd command"""
     def __init__(self, args):
         pass
 
@@ -91,6 +96,7 @@ class Pwd(Command):
 
 
 class Exit(Command):
+    """Class which represents exit command"""
     def __init__(self, args):
         pass
 
@@ -101,6 +107,7 @@ class Exit(Command):
 
 
 class Declaration(Command):
+    """Class which represents declaration command"""
     def __init__(self, args):
         self.dct = args[0]
         self.name = args[1]
@@ -113,6 +120,7 @@ class Declaration(Command):
 
 
 class External(Command):
+    """Class which represents external command"""
     def __init__(self, command, args):
         self.command = command
         self.args = args

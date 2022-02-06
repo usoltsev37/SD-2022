@@ -43,3 +43,24 @@ def test_parse_exit():
     parser = Parser(line)
     expected_result = [Token("exit", Type.STRING), Token(chr(0), Type.END)]
     assert parser.parse() == expected_result
+
+
+def test_parse_quotes_echo_one_word():
+    line = "echo 'Hello'"
+    parser = Parser(line)
+    expected_result = [Token("echo", Type.STRING), Token("Hello", Type.CLEAN_STRING), Token(chr(0), Type.END)]
+    assert parser.parse() == expected_result
+
+
+def test_parse_quotes_echo_many_words():
+    line = "echo 'Hello world!'"
+    parser = Parser(line)
+    expected_result = [Token("echo", Type.STRING), Token("Hello world!", Type.CLEAN_STRING), Token(chr(0), Type.END)]
+    assert parser.parse() == expected_result
+
+
+def test_parse_quotes():
+    line = 'cat "file.txt"'
+    parser = Parser(line)
+    expected_result = [Token("cat", Type.STRING), Token("file.txt", Type.STRING), Token(chr(0), Type.END)]
+    assert parser.parse() == expected_result
