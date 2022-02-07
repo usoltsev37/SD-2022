@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from os import getcwd
 from typing import List
-import subprocess
+import subprocess as sb
 
 
 class Command(ABC):
@@ -84,12 +84,10 @@ class Echo(Command):
         :param stdout: output stream
         :return: None
         """
-        self.stdin = stdin
-        self.stdout = stdout
         if len(self.args) != 0:
-            print(*self.args, file=self.stdout, end='')
+            print(*self.args, file=stdout, end='')
         else:
-            print(self.stdin.read(), file=self.stdout, end='')
+            print(stdin.read(), file=stdout, end='')
 
 
 class Wc(Command):
@@ -162,9 +160,7 @@ class Pwd(Command):
         :param stdout: output stream
         :return: None
         """
-        self.stdin = stdin
-        self.stdout = stdout
-        print(getcwd(), file=self.stdout, end='')
+        print(getcwd(), file=stdout, end='')
 
 
 class Exit(Command):
@@ -181,8 +177,6 @@ class Exit(Command):
         :raise SystemExit exception
         :return: None
         """
-        self.stdin = stdin
-        self.stdout = stdout
         raise SystemExit("CLI exit")
 
 
@@ -192,7 +186,7 @@ class Declaration(Command):
     def __init__(self, args):
         """
         Initialize of the dict, name and value of the variable
-        :param args: list of command arguments
+        :param args: [dict of variables, name, value]
         :raise AttributeError if the length of the args list is not equals to 3
         """
         if len(args) != 3:
@@ -208,8 +202,6 @@ class Declaration(Command):
         :param stdout: output stream
         :return: None
         """
-        self.stdin = stdin
-        self.stdout = stdout
         self.dct[self.name] = self.value
 
 
@@ -222,10 +214,11 @@ class External(Command):
         :param args: list of command arguments
         :raise AttributeError if the length of the args list is equals zero
         """
-        if len(args) == 0:
-            raise AttributeError("External: command expected")
+        if len(args) < 2:
+            raise AttributeError("External: command and vars expected")
         self.command = args[0]
-        self.args = args[1:]
+        self.vars = args[1]
+        self.args = args[2:]
 
     def execute(self, stdin, stdout):
         """
@@ -233,6 +226,9 @@ class External(Command):
         :param stdin: input stream
         :param stdout: output stream
         """
-        self.stdin = stdin
-        self.stdout = stdout
-        return subprocess.call([self.command, *self.args], stdin=self.stdin, stdout=self.stdout)
+        if stdin.isatty():
+            inp = stdin.read().encode()
+        else:
+            inp = b''
+        proc = sb.run([self.command] + self.args, input=inp, stdout=sb.PIPE)
+        print(proc.stdout.decode(), file=stdout, end='')
