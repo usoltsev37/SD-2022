@@ -150,7 +150,7 @@ class Wc(Command):
         self.stdin = stdin
         self.stdout = stdout
         if not self.arg:
-            self.wc(self.stdin)
+            print(*self.wc(self.stdin), file=self.stdout, end='')
         else:
             self.wc_file(self.arg)
 
