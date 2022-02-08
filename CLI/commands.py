@@ -40,8 +40,9 @@ class Cat(Command):
 
     def cat(self, lines):
         """
+        Function that cat given lines
         :param lines: input lines
-        :return:
+        :return: None
         """
         for line in lines:
             print(line, file=self.stdout, end='')
