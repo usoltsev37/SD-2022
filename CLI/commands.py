@@ -38,6 +38,14 @@ class Cat(Command):
             raise AttributeError("Too many arguments")
         self.arg = args[0] if len(args) > 0 else None
 
+    def cat(self, lines):
+        """
+        :param lines: input lines
+        :return:
+        """
+        for line in lines:
+            print(line, file=self.stdout, end='')
+
     def cat_file(self, filename: str):
         """
         Print the content of the given file into output stream
@@ -47,8 +55,7 @@ class Cat(Command):
         """
         try:
             with open(filename) as lines:
-                for line in lines:
-                    print(line, file=self.stdout, end='')
+                self.cat(lines)
         except FileNotFoundError:
             print(f'cat: {filename}: No such file or directory')
 
@@ -62,7 +69,7 @@ class Cat(Command):
         self.stdin = stdin
         self.stdout = stdout
         if not self.arg:
-            self.cat_file(self.stdin.read().strip())
+            self.cat(self.stdin.read().strip())
         else:
             self.cat_file(self.arg)
 
