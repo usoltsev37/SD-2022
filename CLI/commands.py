@@ -8,12 +8,12 @@ class Command(ABC):
     """Abstract class command. Each command is inherited from this class"""
 
     @abstractmethod
-    def __init__(self, args: list):
+    def __init__(self):
         """
-        Makes self.args same as given args
+        Constructor
         :param args: list of command arguments
         """
-        self.args = args
+        pass
 
     @abstractmethod
     def execute(self, stdin, stdout):
@@ -30,7 +30,7 @@ class Cat(Command):
 
     def __init__(self, args: List[str]):
         """
-        Makes self.args same as given args list
+        Constructor
         :param args: list of command arguments
         :raise AttributeError if the length of the args list is greater than 1
         """
@@ -80,7 +80,7 @@ class Echo(Command):
 
     def __init__(self, args: List[str]):
         """
-        Makes self.args same as given args list
+        Constructor
         :param args: list of command arguments
         """
         self.args = args
@@ -103,7 +103,7 @@ class Wc(Command):
 
     def __init__(self, args: List[str]):
         """
-        Makes self.args same as given args list
+        Constructor
         :param args: list of command arguments
         :raise AttributeError if the length of the args list is greater than 1
         """
@@ -128,7 +128,7 @@ class Wc(Command):
 
     def wc_file(self, filename: str):
         """
-        Functuon that calculates total number of lines, words and bytes in the given file
+        Function that calculates total number of lines, words and bytes in the given file
         :param filename: name of the file
         :raise FileNotFoundError if the given file cannot be found
         :return: None
@@ -193,7 +193,7 @@ class Declaration(Command):
 
     def __init__(self, args):
         """
-        Initialize of the dict, name and value of the variable
+        Constructor
         :param args: [dict of variables, name, value]
         :raise AttributeError if the length of the args list is not equals to 3
         """
@@ -218,7 +218,7 @@ class External(Command):
 
     def __init__(self, args: List[str]):
         """
-        Initialize of the dict, name and value of the variable
+        Constructor
         :param args: list of command arguments
         :raise AttributeError if the length of the args list is equals zero
         """

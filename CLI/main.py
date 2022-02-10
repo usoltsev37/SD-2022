@@ -9,6 +9,9 @@ import re
 
 
 class CLI:
+    """
+    Class which represents CLI interpreter.
+    """
     def __init__(self):
         self.vars = {}
 

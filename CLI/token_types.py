@@ -18,7 +18,7 @@ class Token:
     """
     def __init__(self, value: str, token_type: Type):
         """
-        Initialize token type and token value with given arguments
+        Constructor
         :param value: token value
         :param token_type: token type
         """
