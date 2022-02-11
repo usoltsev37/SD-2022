@@ -30,7 +30,7 @@ class CLI:
         parser = Parser(line, self.vars)
         commandsList = parser.parse()
         for command in commandsList:
-            self.is_running = command.execute(io_in, io_out)
+            self.is_running = not command.execute(io_in, io_out)
             io_in = io_out
             io_in.seek(0, 0)
             io_out = io.StringIO()
