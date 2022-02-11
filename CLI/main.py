@@ -87,7 +87,7 @@ class CLI:
                 if len(tokens[begin:pos]) > 0:
                     try:
                         command = self.parseCommand(tokens[begin:pos])
-                        self.is_running = command.execute(io_in, io_out)
+                        self.is_running = not command.execute(io_in, io_out)
                         io_in = io_out
                         io_in.seek(0, 0)
                         io_out = io.StringIO()
