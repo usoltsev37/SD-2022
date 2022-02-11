@@ -77,12 +77,13 @@ def test_exit():
 
 
 def test_execute_exit():
-    with pytest.raises(SystemExit):
-        cli = CLI()
-        stdin = io.StringIO()
-        stdout = io.StringIO()
-        line = "exit"
-        cli.process(line, stdin, stdout)
+    cli = CLI()
+    assert cli.is_running == True
+    stdin = io.StringIO()
+    stdout = io.StringIO()
+    line = "exit"
+    cli.process(line, stdin, stdout)
+    assert cli.is_running == False
 
 
 def test_declaration():

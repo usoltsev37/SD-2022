@@ -73,6 +73,7 @@ class Cat(Command):
             self.cat(self.stdin.read().strip())
         else:
             self.cat_file(self.arg)
+        return True
 
 
 class Echo(Command):
@@ -96,6 +97,7 @@ class Echo(Command):
             print(*self.args, file=stdout, end='')
         else:
             print(stdin.read(), file=stdout, end='')
+        return True
 
 
 class Wc(Command):
@@ -153,6 +155,7 @@ class Wc(Command):
             print(*self.wc(self.stdin), file=self.stdout, end='')
         else:
             self.wc_file(self.arg)
+        return True
 
 
 class Pwd(Command):
@@ -169,6 +172,7 @@ class Pwd(Command):
         :return: None
         """
         print(getcwd(), file=stdout, end='')
+        return True
 
 
 class Exit(Command):
@@ -185,7 +189,7 @@ class Exit(Command):
         :raise SystemExit exception
         :return: None
         """
-        raise SystemExit("CLI exit")
+        return False
 
 
 class Declaration(Command):
@@ -211,6 +215,7 @@ class Declaration(Command):
         :return: None
         """
         self.dct[self.name] = self.value
+        return True
 
 
 class External(Command):
@@ -240,3 +245,4 @@ class External(Command):
             inp = b''
         proc = sb.run([self.command] + self.args, input=inp, stdout=sb.PIPE)
         print(proc.stdout.decode(), file=stdout, end='')
+        return True
