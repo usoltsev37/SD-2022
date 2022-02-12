@@ -82,3 +82,18 @@ def test_declaration():
     stdout.seek(0, 0)
     result = stdout.read()
     assert result == "\n5\n"
+
+
+def test_declaration_twice():
+    cli = CLI()
+    stdin = io.StringIO()
+    stdout = io.StringIO()
+    line = "x=5"
+    cli.process(line, stdin, stdout)
+    line = "x=10"
+    cli.process(line, stdin, stdout)
+    line = "echo $x"
+    cli.process(line, stdin, stdout)
+    stdout.seek(0, 0)
+    result = stdout.read()
+    assert result == "\n\n10\n"
