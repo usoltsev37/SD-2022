@@ -65,7 +65,7 @@ class Cat(Command):
         Function executes cat command
         :param stdin: input stream
         :param stdout: output stream
-        :return: None
+        :return: 0 - command was executed successfully
         """
         self.stdin = stdin
         self.stdout = stdout
@@ -74,6 +74,11 @@ class Cat(Command):
         else:
             self.cat_file(self.arg)
         return 0
+
+    def __eq__(self, other):
+        if isinstance(other, Cat):
+            return self.arg == other.arg
+        return False
 
 
 class Echo(Command):
@@ -91,13 +96,18 @@ class Echo(Command):
         Function executes echo command
         :param stdin: input stream
         :param stdout: output stream
-        :return: None
+        :return: 0 - command was executed successfully
         """
         if len(self.args) != 0:
             print(*self.args, file=stdout, end='')
         else:
             print(stdin.read(), file=stdout, end='')
         return 0
+
+    def __eq__(self, other):
+        if isinstance(other, Echo):
+            return self.args == other.args
+        return False
 
 
 class Wc(Command):
@@ -147,7 +157,7 @@ class Wc(Command):
         Function executes wc command
         :param stdin: input stream
         :param stdout: output stream
-        :return: None
+        :return: 0 - command was executed successfully
         """
         self.stdin = stdin
         self.stdout = stdout
@@ -156,6 +166,11 @@ class Wc(Command):
         else:
             self.wc_file(self.arg)
         return 0
+
+    def __eq__(self, other):
+        if isinstance(other, Wc):
+            return self.arg == other.arg
+        return False
 
 
 class Pwd(Command):
@@ -169,10 +184,15 @@ class Pwd(Command):
         Function executes pwd command
         :param stdin: input stream
         :param stdout: output stream
-        :return: None
+        :return:  0 - command was executed successfully
         """
         print(getcwd(), file=stdout, end='')
         return 0
+
+    def __eq__(self, other):
+        if isinstance(other, Pwd):
+            return True
+        return False
 
 
 class Exit(Command):
@@ -187,9 +207,14 @@ class Exit(Command):
         :param stdin: input stream
         :param stdout: output stream
         :raise SystemExit exception
-        :return: None
+        :return: 1 - process finished
         """
         return 1
+
+    def __eq__(self, other):
+        if isinstance(other, Exit):
+            return True
+        return False
 
 
 class Declaration(Command):
@@ -212,10 +237,15 @@ class Declaration(Command):
         Function executes declaration command
         :param stdin: input stream
         :param stdout: output stream
-        :return: None
+        :return: 0 - command was executed successfully
         """
         self.dct[self.name] = self.value
         return 0
+
+    def __eq__(self, other):
+        if isinstance(other, Declaration):
+            return self.args == other.args
+        return False
 
 
 class External(Command):
@@ -245,4 +275,8 @@ class External(Command):
             inp = b''
         proc = sb.run([self.command] + self.args, input=inp, stdout=sb.PIPE)
         print(proc.stdout.decode(), file=stdout, end='')
-        return 0
+
+    def __eq__(self, other):
+        if isinstance(other, External):
+            return self.args == other.args
+        return False
