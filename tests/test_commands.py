@@ -58,6 +58,19 @@ def test_execute_exit():
     assert cli.is_running == False
 
 
+def test_execute_external():
+    cli = CLI()
+    stdin = io.StringIO()
+    stdout = io.StringIO()
+    assert os.path.exists('./external.txt') == False
+    line = "touch ./external.txt"
+    cli.process(line, stdin, stdout)
+    assert os.path.exists('./external.txt') == True
+    line = "rm ./external.txt"
+    cli.process(line, stdin, stdout)
+    assert os.path.exists('./external.txt') == False
+
+
 def test_declaration():
     cli = CLI()
     stdin = io.StringIO()

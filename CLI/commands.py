@@ -268,13 +268,16 @@ class External(Command):
         Function executes external command
         :param stdin: input stream
         :param stdout: output stream
+        :return return code
         """
         if stdin.isatty():
             inp = stdin.read().encode()
         else:
             inp = b''
-        proc = sb.run([self.command] + self.args, input=inp, stdout=sb.PIPE)
-        print(proc.stdout.decode(), file=stdout, end='')
+        proc = sb.run(' '.join([self.command] + self.args), input=inp, stdout=sb.PIPE, shell=True, env=self.vars)
+        if proc.returncode == 0:
+            print(proc.stdout.decode(), file=stdout, end='')
+        return proc.returncode
 
     def __eq__(self, other):
         if isinstance(other, External):
