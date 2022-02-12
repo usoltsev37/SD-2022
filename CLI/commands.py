@@ -278,5 +278,5 @@ class External(Command):
 
     def __eq__(self, other):
         if isinstance(other, External):
-            return self.args == other.args
+            return self.args == other.args and self.vars == other.vars and self.command == other.command
         return False
