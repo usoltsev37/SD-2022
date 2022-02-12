@@ -117,3 +117,12 @@ def test_token_methods():
     token = Token("echo", Type.STRING)
     assert token.getValue() == "echo"
     assert token.getType() == Type.STRING
+
+
+def test_parseCommands_pipes_echo_wc():
+    line = "echo Hello | exit | echo Hi"
+    parser = Parser(line, {})
+    tokens = [Token("echo", Type.STRING), Token("Hello", Type.STRING), Token("|", Type.PIPE),
+              Token("exit", Type.STRING), Token("|", Type.PIPE), Token("echo", Type.STRING), Token("Hi", Type.STRING),
+              Token(chr(0), Type.END)]
+    assert parser.parseCommands(tokens) == [Echo(["Hello"]), Exit([]), Echo(["Hi"])]

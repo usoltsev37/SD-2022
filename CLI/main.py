@@ -2,6 +2,7 @@ import sys
 import io
 from typing import Any
 from CLI.parser import Parser
+from CLI.commands import Exit
 
 
 class CLI:
@@ -34,6 +35,8 @@ class CLI:
             io_in = io_out
             io_in.seek(0, 0)
             io_out = io.StringIO()
+        if self.is_running == False and len(commandsList) > 1 and isinstance(commandsList[-1], Exit):
+            self.is_running = True
         stdout.write(io_in.read())
         stdout.write('\n')
 
