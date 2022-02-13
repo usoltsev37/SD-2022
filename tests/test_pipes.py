@@ -56,7 +56,7 @@ def test_execute_pipes_exit_end():
     assert cli.is_running
 
 
-def test_execute_pipes_with_vars():
+def test_execute_pipes_with_vars1():
     cli = CLI()
     stdin = io.StringIO()
     stdout = io.StringIO()
@@ -65,3 +65,47 @@ def test_execute_pipes_with_vars():
     stdout.seek(0, 0)
     result = stdout.read()
     assert result == ""
+
+
+def test_execute_pipes_with_vars2():
+    cli = CLI()
+    stdin = io.StringIO()
+    stdout = io.StringIO()
+    line = "echo Hello | x='Hello' | echo $x"
+    cli.process(line, stdin, stdout)
+    stdout.seek(0, 0)
+    result = stdout.read()
+    assert result == ""
+
+
+def test_execute_pipes_with_vars2():
+    cli = CLI()
+    stdin = io.StringIO()
+    stdout = io.StringIO()
+    line = "echo 'Hello' | wc | x=1 | y=1 | echo $x"
+    cli.process(line, stdin, stdout)
+    stdout.seek(0, 0)
+    result = stdout.read()
+    assert result == ""
+
+
+def test_execute_pipes_echo_external1():
+    cli = CLI()
+    stdin = io.StringIO()
+    stdout = io.StringIO()
+    line = "echo 'Hello' | grep 'buy'"
+    cli.process(line, stdin, stdout)
+    stdout.seek(0, 0)
+    result = stdout.read()
+    assert result == ""
+
+
+def test_execute_pipes_echo_external2():
+    cli = CLI()
+    stdin = io.StringIO()
+    stdout = io.StringIO()
+    line = "echo 'Hello' | grep 'Hel'"
+    cli.process(line, stdin, stdout)
+    stdout.seek(0, 0)
+    result = stdout.read()
+    assert result == "Hello\n"

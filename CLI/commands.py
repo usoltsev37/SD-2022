@@ -285,9 +285,10 @@ class External(Command):
         else:
             inp = b''
         env = os.environ.copy().update(self.vars)
-        proc = sb.run(' '.join([self.command] + self.args), input=inp, stdout=sb.PIPE, stderr=sb.PIPE, env=env, shell=True)
+        proc = sb.run(' '.join([self.command] + self.args), input=inp, stdout=sb.PIPE, stderr=sb.PIPE, env=env,
+                      shell=True)
         if proc.returncode == 0:
-            print(self.decode(proc.stdout), file=stdout, end='')
+            print(self.decode(proc.stdout.strip()), file=stdout, end='')
         else:
             print(self.decode(proc.stderr), end='')
         return False
