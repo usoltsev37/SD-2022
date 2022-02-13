@@ -50,25 +50,25 @@ def test_execute_pwd():
 
 def test_execute_exit():
     cli = CLI()
-    assert cli.is_running == True
+    assert cli.is_running
     stdin = io.StringIO()
     stdout = io.StringIO()
     line = "exit"
     cli.process(line, stdin, stdout)
-    assert cli.is_running == False
+    assert not cli.is_running
 
 
 def test_execute_external():
     cli = CLI()
     stdin = io.StringIO()
     stdout = io.StringIO()
-    assert os.path.exists('./external.txt') == False
+    assert not os.path.exists('./external.txt')
     line = "touch ./external.txt"
     cli.process(line, stdin, stdout)
-    assert os.path.exists('./external.txt') == True
+    assert os.path.exists('./external.txt')
     line = "rm ./external.txt"
     cli.process(line, stdin, stdout)
-    assert os.path.exists('./external.txt') == False
+    assert not os.path.exists('./external.txt')
 
 
 def test_declaration():
@@ -81,7 +81,7 @@ def test_declaration():
     cli.process(line, stdin, stdout)
     stdout.seek(0, 0)
     result = stdout.read()
-    assert result == "\n5\n"
+    assert result == "5\n"
 
 
 def test_declaration_twice():
@@ -96,4 +96,4 @@ def test_declaration_twice():
     cli.process(line, stdin, stdout)
     stdout.seek(0, 0)
     result = stdout.read()
-    assert result == "\n\n10\n"
+    assert result == "10\n"

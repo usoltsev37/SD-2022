@@ -13,7 +13,7 @@ def test_parseCommands_cat():
     line = "cat main.py"
     parser = Parser(line, {})
     tokens = [Token("cat", Type.STRING), Token("main.py", Type.STRING), Token(chr(0), Type.END)]
-    assert parser.parseCommands(tokens) == [Cat(["main.py"])]
+    assert parser.parse_сommands(tokens) == [Cat(["main.py"])]
 
 
 def test_parse_echo_one_argument():
@@ -32,7 +32,7 @@ def test_parseCommands_echo_one_argument():
     line = "echo Hello"
     parser = Parser(line, {})
     tokens = [Token("echo", Type.STRING), Token("Hello", Type.STRING), Token(chr(0), Type.END)]
-    assert parser.parseCommands(tokens) == [Echo(["Hello"])]
+    assert parser.parse_сommands(tokens) == [Echo(["Hello"])]
 
 
 def test_parseCommands_echo_many_arguments():
@@ -40,7 +40,7 @@ def test_parseCommands_echo_many_arguments():
     parser = Parser(line, {})
     tokens = [Token("echo", Type.STRING), Token("Hello", Type.STRING), Token("world", Type.STRING),
               Token(chr(0), Type.END)]
-    assert parser.parseCommands(tokens) == [Echo(["Hello", "world"])]
+    assert parser.parse_сommands(tokens) == [Echo(["Hello", "world"])]
 
 
 def test_parce_wc():
@@ -53,7 +53,7 @@ def test_parseCommands_wc_file():
     line = "wc file.txt"
     parser = Parser(line, {})
     tokens = [Token("wc", Type.STRING), Token("main.py", Type.STRING), Token(chr(0), Type.END)]
-    assert parser.parseCommands(tokens) == [Wc(["main.py"])]
+    assert parser.parse_сommands(tokens) == [Wc(["main.py"])]
 
 
 def test_parse_pwd():
@@ -66,7 +66,7 @@ def test_parseCommands_pwd():
     line = "pwd"
     parser = Parser(line, {})
     tokens = [Token("pwd", Type.STRING), Token(chr(0), Type.END)]
-    assert parser.parseCommands(tokens) == [Pwd([])]
+    assert parser.parse_сommands(tokens) == [Pwd([])]
 
 
 def test_parse_exit():
@@ -79,7 +79,7 @@ def test_parseCommands_exit():
     line = "exit"
     parser = Parser(line, {})
     tokens = [Token("exit", Type.STRING), Token(chr(0), Type.END)]
-    assert parser.parseCommands(tokens) == [Exit([])]
+    assert parser.parse_сommands(tokens) == [Exit([])]
 
 
 def test_parse_external():
@@ -92,7 +92,7 @@ def test_parseCommands_external():
     line = "git init"
     parser = Parser(line, {})
     tokens = [Token("git", Type.STRING), Token("init", Type.STRING), Token(chr(0), Type.END)]
-    assert parser.parseCommands(tokens) == [External(["git", {}, "init"])]
+    assert parser.parse_сommands(tokens) == [External(["git", {}, "init"])]
 
 
 def test_parse_quotes_echo_one_word():
@@ -125,4 +125,4 @@ def test_parseCommands_pipes_echo_wc():
     tokens = [Token("echo", Type.STRING), Token("Hello", Type.STRING), Token("|", Type.PIPE),
               Token("exit", Type.STRING), Token("|", Type.PIPE), Token("echo", Type.STRING), Token("Hi", Type.STRING),
               Token(chr(0), Type.END)]
-    assert parser.parseCommands(tokens) == [Echo(["Hello"]), Exit([]), Echo(["Hi"])]
+    assert parser.parse_сommands(tokens) == [Echo(["Hello"]), Exit([]), Echo(["Hi"])]

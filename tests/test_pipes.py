@@ -1,7 +1,6 @@
-from CLI.commands import Cat, Echo, Wc, Exit
+from CLI.commands import Cat, Echo, Wc
 from CLI.main import CLI
 import io
-
 from CLI.parser import Parser
 from CLI.token_types import Token, Type
 
@@ -28,33 +27,33 @@ def test_parseCommands_pipes_echo_wc():
     parser = Parser(line, {})
     tokens = [Token("echo", Type.STRING), Token("Hello", Type.STRING), Token("|", Type.PIPE), Token("wc", Type.STRING),
               Token(chr(0), Type.END)]
-    assert parser.parseCommands(tokens) == [Echo(["Hello"]), Wc([])]
+    assert parser.parse_сommands(tokens) == [Echo(["Hello"]), Wc([])]
 
 
 def test_execute_pipes_with_exit_middle():
     cli = CLI()
     stdin = io.StringIO()
     stdout = io.StringIO()
-    assert cli.is_running == True
+    assert cli.is_running
     line = "echo Hello | exit | echo world"
     cli.process(line, stdin, stdout)
     stdout.seek(0, 0)
     result = stdout.read()
     assert result == "world\n"
-    assert cli.is_running == True
+    assert cli.is_running
 
 
 def test_execute_pipes_exit_end():
     cli = CLI()
     stdin = io.StringIO()
     stdout = io.StringIO()
-    assert cli.is_running == True
+    assert cli.is_running
     line = "x=1 | echo $x | exit"
     cli.process(line, stdin, stdout)
     stdout.seek(0, 0)
     result = stdout.read()
-    assert result == "\n"
-    assert cli.is_running == True
+    assert result == ""
+    assert cli.is_running
 
 
 def test_execute_pipes_with_vars():
@@ -65,5 +64,4 @@ def test_execute_pipes_with_vars():
     cli.process(line, stdin, stdout)
     stdout.seek(0, 0)
     result = stdout.read()
-    assert result == "\n"
-
+    assert result == ""
