@@ -318,6 +318,10 @@ class Grep(Command):
         parser.add_argument('-i', dest='ignore_case', action='store_true')
         parser.add_argument('-A', dest='after_context', default=0)
         self.args = parser.parse_args(args)
+        try:
+            self.args.after_context = int(self.args.after_context)
+        except ValueError:
+            print('ValueError: the value following -A is not a number')
 
     @staticmethod
     def join_ranges(ranges: List[List[int]]) -> List[List[int]]:
@@ -337,10 +341,10 @@ class Grep(Command):
                 ans.append([first, el[0]])
         return ans
 
-    def calculate_result(self, name_file, count_files, lines) -> List[str]:
+    def calculate_result(self, file_name, count_files, lines) -> List[str]:
         """
-
-        :param name_file: File name
+        Looking for matches in lines
+        :param file_name: File name
         :param count_files: Number of files
         :param lines: Lines
         :return: Lines that match
@@ -357,11 +361,11 @@ class Grep(Command):
             line = line.lower() if self.args.ignore_case else line
             if valid(line):
                 ranges.append([i, 0])
-                ranges.append([int(self.args.after_context) + i + 1, 1])
+                ranges.append([self.args.after_context + i + 1, 1])
         for i in self.join_ranges(ranges):
             result += lines[i[0]:i[1]]
         if count_files > 1:
-            result = [f'{name_file}:{line}' for line in result]
+            result = [f'{file_name}:{line}' for line in result]
         return result
 
     def print_grep(self, in_file, count_files, file):
@@ -387,6 +391,9 @@ class Grep(Command):
             self.print_grep(stdin.readlines(), 0, '')
         else:
             for file in self.args.files:
-                with open(file, 'r') as in_file:
-                    self.print_grep(in_file.readlines(), len(self.args.files), file)
+                try:
+                    with open(file, 'r') as in_file:
+                        self.print_grep(in_file.readlines(), len(self.args.files), file)
+                except FileNotFoundError:
+                    print(f"No such file or directory: {file}")
         return False
