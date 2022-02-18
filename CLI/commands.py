@@ -339,7 +339,7 @@ class Grep(Command):
 
     def calculate_result(self, name_file, count_files, lines) -> List[str]:
         """
-        
+
         :param name_file: File name
         :param count_files: Number of files
         :param lines: Lines
@@ -372,8 +372,8 @@ class Grep(Command):
         :param file: File name
         """
         lines = [line.rstrip('\n') for line in in_file]
-        for i in self.calculate_result(file, count_files, lines):
-            print(i, file=self.stdout)
+        result = '\n'.join(self.calculate_result(file, count_files, lines))
+        print(result, file=self.stdout, end='')
 
     def execute(self, stdin, stdout):
         """
