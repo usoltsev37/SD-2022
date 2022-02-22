@@ -78,7 +78,7 @@ def test_execute_pipes_with_vars2():
     assert result == ""
 
 
-def test_execute_pipes_with_vars2():
+def test_execute_pipes_with_vars3():
     cli = CLI()
     stdin = io.StringIO()
     stdout = io.StringIO()
