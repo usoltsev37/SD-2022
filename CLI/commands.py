@@ -397,7 +397,7 @@ class Grep(Command):
         else:
             for file in self.args.files:
                 try:
-                    with open(file, 'r') as in_file:
+                    with open(file, 'r', encoding="utf-8") as in_file:
                         self.print_grep(in_file.readlines(), len(self.args.files), file)
                 except FileNotFoundError:
                     print(f"No such file or directory: {file}")
