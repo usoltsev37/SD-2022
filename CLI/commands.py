@@ -6,7 +6,7 @@ from typing import List
 import sys
 import os
 import subprocess as sb
-import argparse
+from CLI.OwnParse import OwnArgumentParser, ArgumentError
 
 
 class Command(ABC):
@@ -302,6 +302,8 @@ class External(Command):
 
 
 class Grep(Command):
+    """Class which represents grep command"""
+
     def __init__(self, args: List[str]):
         """
         Constructor
@@ -310,18 +312,13 @@ class Grep(Command):
         """
         if len(args) == 0:
             raise AttributeError("External: command and vars expected")
-        parser = argparse.ArgumentParser()
-        parser.add_argument('needle', type=str)
-        parser.add_argument('files', nargs='*', type=str)
-        parser.add_argument('-E', dest='regex', action='store_true')
-        parser.add_argument('-w', dest='word_regexp', action='store_true')
-        parser.add_argument('-i', dest='ignore_case', action='store_true')
-        parser.add_argument('-A', dest='after_context', default=0)
-        self.args = parser.parse_args(args)
-        try:
-            self.args.after_context = int(self.args.after_context)
-        except ValueError:
-            print('ValueError: the value following -A is not a number')
+        self.parser = OwnArgumentParser()
+        self.parser.add_argument('needle', type=str)
+        self.parser.add_argument('files', nargs='*', type=str)
+        self.parser.add_argument('-w', dest='word_regexp', action='store_true')
+        self.parser.add_argument('-i', dest='ignore_case', action='store_true')
+        self.parser.add_argument('-A', dest='after_context', default=0)
+        self.args = args
 
     @staticmethod
     def join_ranges(ranges: List[List[int]]) -> List[List[int]]:
@@ -332,14 +329,14 @@ class Grep(Command):
         """
         ranges.sort()
         first, count = 0, 0
-        ans = []
-        for el in ranges:
-            count = count + 1 if el[1] == 0 else count - 1
-            if count == 1 and el[1] == 0:
-                first = el[0]
-            if count == 0 and el[1] == 1:
-                ans.append([first, el[0]])
-        return ans
+        new_ranges = []
+        for element in ranges:
+            count = count + 1 if element[1] == 0 else count - 1
+            if count == 1 and element[1] == 0:
+                first = element[0]
+            if count == 0 and element[1] == 1:
+                new_ranges.append([first, element[0]])
+        return new_ranges
 
     def calculate_result(self, file_name, count_files, lines) -> List[str]:
         """
@@ -352,14 +349,10 @@ class Grep(Command):
         result = []
         self.args.needle = self.args.needle.lower() if self.args.ignore_case else self.args.needle
         self.args.needle = r'(^|\W)' + self.args.needle + r'(\W|$)' if self.args.word_regexp else self.args.needle
-        if self.args.regex or self.args.word_regexp:
-            valid = lambda x: re.search(self.args.needle, x)
-        else:
-            valid = lambda x: self.args.needle in x
         ranges = []
         for i, line in enumerate(lines):
             line = line.lower() if self.args.ignore_case else line
-            if valid(line):
+            if re.search(self.args.needle, line):
                 ranges.append([i, 0])
                 ranges.append([self.args.after_context + i + 1, 1])
         for i in self.join_ranges(ranges):
@@ -386,6 +379,18 @@ class Grep(Command):
         :param stdout: output stream
         :return: return code
         """
+        try:
+            self.args = self.parser.parse_args(self.args)
+        except ArgumentError as e:
+            print(*e.args)
+            return False
+        try:
+            self.args.after_context = int(self.args.after_context)
+            if self.args.after_context < 0:
+                raise ValueError
+        except ValueError:
+            print('ValueError: the value following -A is not correct')
+            return False
         self.stdout = stdout
         if not self.args.files:
             self.print_grep(stdin.readlines(), 0, '')
@@ -396,4 +401,5 @@ class Grep(Command):
                         self.print_grep(in_file.readlines(), len(self.args.files), file)
                 except FileNotFoundError:
                     print(f"No such file or directory: {file}")
+                    return False
         return False

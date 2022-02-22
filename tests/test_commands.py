@@ -191,7 +191,7 @@ def test_grep_E():
     cli = CLI()
     stdin = io.StringIO()
     stdout = io.StringIO()
-    line = "echo 'ioT\niOT\nIot\nIOT' | grep -E '[iI][oO]t'"
+    line = "echo 'ioT\niOT\nIot\nIOT' | grep '[iI][oO]t'"
     cli.process(line, stdin, stdout)
     stdout.seek(0, 0)
     result = stdout.read()
@@ -203,7 +203,7 @@ def test_grep_E_start_with():
     stdin = io.StringIO(
         "Halfway down the stairs\nIs a stair\nWhere I sit.\nThere isn't any\nOther stair\nQuite like\nIt.")
     stdout = io.StringIO()
-    line = "grep -E '^Where'"
+    line = "grep '^Where'"
     cli.process(line, stdin, stdout)
     stdout.seek(0, 0)
     result = stdout.read()
@@ -215,7 +215,7 @@ def test_grep_E_ends_with():
     stdin = io.StringIO(
         "Halfway down the stairs\nIs a stair\nWhere I sit.\nThere isn't any\nOther stair\nQuite like\nIt.")
     stdout = io.StringIO()
-    line = "grep -E 'stair$'"
+    line = "grep 'stair$'"
     cli.process(line, stdin, stdout)
     stdout.seek(0, 0)
     result = stdout.read()
@@ -226,7 +226,7 @@ def test_grep_E_with_star():
     cli = CLI()
     stdin = io.StringIO("yellow\nyeeellow\nyeyelo")
     stdout = io.StringIO()
-    line = "grep -E 'y*llow'"
+    line = "grep 'y*llow'"
     cli.process(line, stdin, stdout)
     stdout.seek(0, 0)
     result = stdout.read()
@@ -238,7 +238,7 @@ def test_grep_combine_keys1():
     stdin = io.StringIO(
         "Halfway down the stairs\nIs a stair\nWhere I sit.\nThere isn't any\nOther stair\nQuite like\nIt.")
     stdout = io.StringIO()
-    line = "grep -A 1 -E 'Where'"
+    line = "grep -A 1 'Where'"
     cli.process(line, stdin, stdout)
     stdout.seek(0, 0)
     result = stdout.read()
@@ -250,7 +250,7 @@ def test_grep_combine_keys2():
     stdin = io.StringIO(
         "Halfway down the stairs\nIs a stair\nWhere I sit.\nThere isn't any\nOther stair\nQuite like\nIt.")
     stdout = io.StringIO()
-    line = "grep -iwE 'oTheR'"
+    line = "grep -iw 'oTheR'"
     cli.process(line, stdin, stdout)
     stdout.seek(0, 0)
     result = stdout.read()
