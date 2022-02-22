@@ -58,14 +58,14 @@ class Parser:
                 return Token(res, key)
         raise AssertionError(f'Token not found, unparsed: "{self.string[self.pos:]}"')
 
-    def parse_сommands(self, tokens: List[Token]) -> List[Command]:
+    def parse_commands(self, tokens: List[Token]) -> List[Command]:
         """
         Converts a tokens to a commands
         :param tokens: list of tokens of type CLEAN_STRING
         :return list of Command Instances
         :raise AttributeError: invalid arguments for the command
         """
-        d = {
+        commands_map = {
             'cat': commands.Cat,
             'echo': commands.Echo,
             'wc': commands.Wc,
@@ -77,22 +77,24 @@ class Parser:
         begin = pos
         while pos < len(tokens):
             if tokens[pos].type == Type.PIPE or tokens[pos].type == Type.END:
-                if len(tokens[begin:pos]) > 0:
+                if pos - begin > 0:
                     try:
                         tokens_command = tokens[begin:pos]
-                        begin = pos + 1
                         if len(tokens_command) >= 3 and tokens_command[1].type == Type.DECLARATION:
                             commands_list.append(commands.Declaration(
                                 [self.variables, tokens_command[0].value, tokens_command[2].value]))
+                            begin = pos + 1
                             continue
                         com_name = tokens_command[0].value
                         args = [i.value for i in tokens_command[1:]]
-                        if com_name not in d:
+                        if com_name not in commands_map:
                             commands_list.append(commands.External([com_name, self.variables] + args))
                         else:
-                            commands_list.append(d[com_name](args))
+                            commands_list.append(commands_map[com_name](args))
                     except AttributeError as e:
                         print(e)
+                        return []
+                begin = pos + 1
             pos += 1
         return commands_list
 
@@ -130,6 +132,10 @@ class Parser:
         res = []
         val = None
         while val is None or val.type != Type.END:
-            val = self.next_token()
-            res.append(val)
-        return self.parse_сommands([self.substitution(t) for t in res])
+            try:
+                val = self.next_token()
+                res.append(val)
+            except AssertionError as e:
+                print(*e.args)
+                return []
+        return self.parse_commands([self.substitution(t) for t in res])
