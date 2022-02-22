@@ -27,7 +27,7 @@ def test_parseCommands_pipes_echo_wc():
     parser = Parser(line, {})
     tokens = [Token("echo", Type.STRING), Token("Hello", Type.STRING), Token("|", Type.PIPE), Token("wc", Type.STRING),
               Token(chr(0), Type.END)]
-    assert parser.parse_сommands(tokens) == [Echo(["Hello"]), Wc([])]
+    assert parser.parse_commands(tokens) == [Echo(["Hello"]), Wc([])]
 
 
 def test_execute_pipes_with_exit_middle():
