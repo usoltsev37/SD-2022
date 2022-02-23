@@ -109,3 +109,25 @@ def test_execute_pipes_echo_external2():
     stdout.seek(0, 0)
     result = stdout.read()
     assert result == "Hello\n"
+
+
+def test_execute_pipes_one_empty():
+    cli = CLI()
+    stdin = io.StringIO()
+    stdout = io.StringIO()
+    line = "echo Hello |"
+    cli.process(line, stdin, stdout)
+    stdout.seek(0, 0)
+    result = stdout.read()
+    assert result == "Hello\n"
+
+
+def test_execute_pipes_two_empty():
+    cli = CLI()
+    stdin = io.StringIO()
+    stdout = io.StringIO()
+    line = "echo Hello | |"
+    cli.process(line, stdin, stdout)
+    stdout.seek(0, 0)
+    result = stdout.read()
+    assert result == "Hello\n"
