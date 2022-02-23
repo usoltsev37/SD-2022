@@ -1,6 +1,5 @@
 import io
 import os
-import pytest
 
 from CLI.main import CLI
 
