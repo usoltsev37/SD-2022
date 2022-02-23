@@ -27,7 +27,7 @@ def test_parseCommands_pipes_echo_wc():
     parser = Parser(line, {})
     tokens = [Token("echo", Type.STRING), Token("Hello", Type.STRING), Token("|", Type.PIPE), Token("wc", Type.STRING),
               Token(chr(0), Type.END)]
-    assert parser.parse_сommands(tokens) == [Echo(["Hello"]), Wc([])]
+    assert parser.parse_commands(tokens) == [Echo(["Hello"]), Wc([])]
 
 
 def test_execute_pipes_with_exit_middle():
@@ -105,6 +105,28 @@ def test_execute_pipes_echo_external2():
     stdin = io.StringIO()
     stdout = io.StringIO()
     line = "echo 'Hello' | grep 'Hel'"
+    cli.process(line, stdin, stdout)
+    stdout.seek(0, 0)
+    result = stdout.read()
+    assert result == "Hello\n"
+
+
+def test_execute_pipes_one_empty():
+    cli = CLI()
+    stdin = io.StringIO()
+    stdout = io.StringIO()
+    line = "echo Hello |"
+    cli.process(line, stdin, stdout)
+    stdout.seek(0, 0)
+    result = stdout.read()
+    assert result == "Hello\n"
+
+
+def test_execute_pipes_two_empty():
+    cli = CLI()
+    stdin = io.StringIO()
+    stdout = io.StringIO()
+    line = "echo Hello | |"
     cli.process(line, stdin, stdout)
     stdout.seek(0, 0)
     result = stdout.read()

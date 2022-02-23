@@ -34,6 +34,8 @@ class CLI:
         io_out = io.StringIO()
         parser = Parser(line, self.vars)
         commands_list = parser.parse()
+        if len(commands_list) == 0:
+            return
         for command in commands_list:
             if len(commands_list) > 1 and type(command) in self.pipe_ignore:
                 continue
