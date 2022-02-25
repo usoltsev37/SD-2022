@@ -71,7 +71,9 @@ class Parser:
             'wc': commands.Wc,
             'pwd': commands.Pwd,
             'exit': commands.Exit,
-            'grep': commands.Grep
+            'grep': commands.Grep,
+            'ls': commands.Ls,
+            'cd': commands.Cd
         }
         commands_list = []
         pos = 0

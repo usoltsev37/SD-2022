@@ -1,10 +1,10 @@
 import io
 import re
+import os
 from abc import ABC, abstractmethod
-from os import getcwd
+from os import getcwd, listdir, chdir
 from typing import List
 import sys
-import os
 import subprocess as sb
 from CLI.OwnParse import OwnArgumentParser, ArgumentError
 
@@ -403,3 +403,42 @@ class Grep(Command):
                     print(f"No such file or directory: {file}")
                     return False
         return False
+
+
+class Cd(Command):
+    """Class which represents cd command"""
+
+    def __init__(self, args: List[str]):
+        self.args = args
+
+    def execute(self, stdin, stdout):
+        """
+        Function executes cd command to change currently directory to directory self.args[0]
+        If there are no arguments cd command changes currently directory to directory sys.path[0]
+        :param stdin: input stream
+        :param stdout: output stream
+        :return:  0 - command was executed successfully
+        """
+        if len(self.args) == 0:
+            chdir(sys.path[0])
+        else:
+            chdir(os.path.join(os.path.abspath(getcwd()), self.args[0]))
+        return 0
+
+
+class Ls(Command):
+    """Class which represents ls command to list contents of a directory, for example folder and file names"""
+
+    def __init__(self, args: List[str]):
+        self.args = args
+
+    def execute(self, stdin, stdout):
+        """
+        Function executes ls command
+        :param stdin: input stream
+        :param stdout: output stream
+        :return:  0 - command was executed successfully
+        """
+        for file_name in listdir(os.path.join(os.path.abspath(getcwd()), self.args[0] if len(self.args) > 0 else "")):
+            print(file_name, file=stdout)
+        return 0
