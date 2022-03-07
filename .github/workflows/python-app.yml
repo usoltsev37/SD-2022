@@ -5,9 +5,9 @@ name: Python application
 
 on:
   push:
-    branches: [ hw03 ]
+    branches: [ hw02 ]
   pull_request:
-    branches: [ hw03 ]
+    branches: [ hw02 ]
 
 jobs:
   Uduntu:
