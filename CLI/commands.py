@@ -1,3 +1,6 @@
+import io
+import os
+import sys
 from abc import ABC, abstractmethod
 from os import getcwd
 from typing import List
@@ -261,6 +264,13 @@ class External(Command):
         self.vars = args[1]
         self.args = args[2:]
 
+    @staticmethod
+    def decode(inp):
+        try:
+            return inp.decode(sys.stdout.encoding)
+        except UnicodeDecodeError:
+            return inp.decode('866')
+
     def execute(self, stdin, stdout):
         """
         Function executes external command
@@ -268,14 +278,18 @@ class External(Command):
         :param stdout: output stream
         :return return code
         """
-        if stdin.isatty():
+        if isinstance(stdin, io.StringIO) or stdin.isatty():
             inp = stdin.read().encode()
         else:
             inp = b''
-        proc = sb.run(' '.join([self.command] + self.args), input=inp, stdout=sb.PIPE, shell=True, env=self.vars)
+        env = os.environ.copy().update(self.vars)
+        proc = sb.run(' '.join([self.command] + self.args), input=inp, stdout=sb.PIPE, stderr=sb.PIPE, env=env,
+                      shell=True)
         if proc.returncode == 0:
-            print(proc.stdout.decode(), file=stdout, end='')
-        return proc.returncode
+            print(self.decode(proc.stdout.strip()), file=stdout, end='')
+        else:
+            print(self.decode(proc.stderr), end='')
+        return False
 
     def __eq__(self, other):
         if isinstance(other, External):
