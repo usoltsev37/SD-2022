@@ -419,6 +419,10 @@ class Cd(Command):
         :param stdout: output stream
         :return:  0 - command was executed successfully
         """
+        if len(self.args) > 1:
+            print("Error: Too many arguments")
+            return 0
+
         dir_name = sys.path[0] if len(self.args) == 0 else os.path.join(os.path.abspath(getcwd()), self.args[0])
         if not os.path.exists(dir_name):
             print(f"No such file or directory: {dir_name}")
@@ -441,11 +445,23 @@ class Ls(Command):
         :param stdout: output stream
         :return:  0 - command was executed successfully
         """
-        dir_name = os.path.join(os.path.abspath(getcwd()), self.args[0] if len(self.args) > 0 else "")
-        if not os.path.exists(dir_name):
-            print(f"No such file or directory: {dir_name}")
-            return 0
 
-        for file_name in listdir(dir_name):
-            print(file_name, file=stdout)
+        if len(self.args) == 0:
+            self.args.append("")
+
+        for relative_path in self.args:
+            dir_name = os.path.join(os.path.abspath(getcwd()), relative_path)
+            if not os.path.exists(dir_name):
+                print(f"No such file or directory: {dir_name}", file=stdout)
+                print(file=stdout)
+                continue
+
+            if len(self.args) > 1:
+                print(f"{relative_path}:", file=stdout)
+
+            for file_name in listdir(dir_name):
+                print(file_name, file=stdout)
+
+            print(file=stdout)
+
         return 0
