@@ -3,11 +3,7 @@
 
 name: Python application
 
-on:
-  push:
-    branches: [ hw05 ]
-  pull_request:
-    branches: [ hw05 ]
+on: push
 
 jobs:
   Uduntu:
