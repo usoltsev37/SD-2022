@@ -423,7 +423,7 @@ class Cd(Command):
             print("Error: Too many arguments")
             return 0
 
-        dir_name = sys.path[0] if len(self.args) == 0 else os.path.join(os.path.abspath(getcwd()), self.args[0])
+        dir_name = os.path.expanduser('~') if len(self.args) == 0 else os.path.join(os.path.abspath(getcwd()), self.args[0])
         if not os.path.exists(dir_name):
             print(f"No such file or directory: {dir_name}")
             return 0

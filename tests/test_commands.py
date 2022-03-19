@@ -297,7 +297,7 @@ def test_execute_cd_without_args():
     cli.process("cd", stdin, stdout)
     stdout.seek(0, 0)
 
-    assert os.getcwd() == sys.path[0]
+    assert os.getcwd() == os.path.expanduser('~')
 
 
 def test_execute_ls_several_files():
