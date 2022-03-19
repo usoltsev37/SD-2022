@@ -414,7 +414,7 @@ class Cd(Command):
     def execute(self, stdin, stdout):
         """
         Function executes cd command to change currently directory to directory self.args[0]
-        If there are no arguments cd command changes currently directory to directory sys.path[0]
+        If there are no arguments, cd command changes current directory to directory sys.path[0]
         :param stdin: input stream
         :param stdout: output stream
         :return:  0 - command was executed successfully
