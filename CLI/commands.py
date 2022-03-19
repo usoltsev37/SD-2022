@@ -419,10 +419,12 @@ class Cd(Command):
         :param stdout: output stream
         :return:  0 - command was executed successfully
         """
-        if len(self.args) == 0:
-            chdir(sys.path[0])
-        else:
-            chdir(os.path.join(os.path.abspath(getcwd()), self.args[0]))
+        dir_name = sys.path[0] if len(self.args) == 0 else os.path.join(os.path.abspath(getcwd()), self.args[0])
+        if not os.path.exists(dir_name):
+            print(f"No such file or directory: {dir_name}")
+            return 0
+
+        chdir(dir_name)
         return 0
 
 
@@ -439,6 +441,11 @@ class Ls(Command):
         :param stdout: output stream
         :return:  0 - command was executed successfully
         """
-        for file_name in listdir(os.path.join(os.path.abspath(getcwd()), self.args[0] if len(self.args) > 0 else "")):
+        dir_name = os.path.join(os.path.abspath(getcwd()), self.args[0] if len(self.args) > 0 else "")
+        if not os.path.exists(dir_name):
+            print(f"No such file or directory: {dir_name}")
+            return 0
+
+        for file_name in listdir(dir_name):
             print(file_name, file=stdout)
         return 0
