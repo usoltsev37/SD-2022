@@ -60,16 +60,28 @@ def test_execute_exit():
 
 
 def test_execute_external():
-    cli = CLI()
-    stdin = io.StringIO()
-    stdout = io.StringIO()
-    assert not os.path.exists('./external.txt')
-    line = "touch ./external.txt"
-    cli.process(line, stdin, stdout)
-    assert os.path.exists('./external.txt')
-    line = "rm ./external.txt"
-    cli.process(line, stdin, stdout)
-    assert not os.path.exists('./external.txt')
+    if os.name == 'nt':
+        cli = CLI()
+        stdin = io.StringIO()
+        stdout = io.StringIO()
+        assert not os.path.exists('./external.txt')
+        line = "copy /b NUL external.txt"
+        cli.process(line, stdin, stdout)
+        assert os.path.exists('external.txt')
+        line = "del external.txt"
+        cli.process(line, stdin, stdout)
+        assert not os.path.exists('external.txt')
+    elif os.name == 'posix':
+        cli = CLI()
+        stdin = io.StringIO()
+        stdout = io.StringIO()
+        assert not os.path.exists('./external.txt')
+        line = "touch ./external.txt"
+        cli.process(line, stdin, stdout)
+        assert os.path.exists('./external.txt')
+        line = "rm ./external.txt"
+        cli.process(line, stdin, stdout)
+        assert not os.path.exists('./external.txt')
 
 
 def test_declaration():
