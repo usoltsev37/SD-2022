@@ -10,7 +10,7 @@ on:
     branches: [ hw02 ]
 
 jobs:
-  Uduntu:
+  Ubuntu:
 
     runs-on: ubuntu-latest
 
