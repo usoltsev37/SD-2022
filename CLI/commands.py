@@ -193,9 +193,7 @@ class Pwd(Command):
         return 0
 
     def __eq__(self, other):
-        if isinstance(other, Pwd):
-            return True
-        return False
+        return isinstance(other, Pwd)
 
 
 class Exit(Command):
