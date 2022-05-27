@@ -293,6 +293,28 @@ def test_execute_ls_several_files():
     result = stdout.read()
     assert result == f"{first_dir}:\nworkflows\n\n{second_dir}:\npython-app.yml\n\n\n"
 
+def test_execute_ls_on_file():
+    cli = CLI()
+    stdin = io.StringIO()
+    stdout = io.StringIO()
+
+    file_name = os.path.join("CLI", "main.py")
+    cli.process(f"ls {file_name}", stdin, stdout)
+    stdout.seek(0, 0)
+    result = stdout.read()
+    assert result == f"{file_name}\n\n"
+
+def test_execute_cd_on_file():
+    cli = CLI()
+    stdin = io.StringIO()
+    stdout = io.StringIO()
+
+    file_name = os.path.join("CLI", "main.py")
+    cli.process(f"cd {file_name}", stdin, stdout)
+    stdout.seek(0, 0)
+    result = stdout.read()
+    assert result == f"cd: not a directory: {file_name}\n\n"
+
 def test_execute_cd():
     cli = CLI()
     stdin = io.StringIO()

@@ -418,12 +418,17 @@ class Cd(Command):
         :return:  0 - command was executed successfully
         """
         if len(self.args) > 1:
-            print("Error: Too many arguments")
+            print("Error: Too many arguments", file=stdout)
             return 0
 
         dir_name = os.path.expanduser('~') if len(self.args) == 0 else os.path.join(os.path.abspath(getcwd()), self.args[0])
+
+        if os.path.isfile(dir_name):
+            print(f"cd: not a directory: {self.args[0]}", file=stdout)
+            return 0
+
         if not os.path.exists(dir_name):
-            print(f"No such file or directory: {dir_name}")
+            print(f"No such file or directory: {dir_name}", file=stdout)
             return 0
 
         chdir(dir_name)
@@ -448,7 +453,7 @@ class Ls(Command):
             self.args.append("")
 
         for relative_path in self.args:
-            dir_name = os.path.join(getcwd(), relative_path)
+            dir_name = os.path.join(os.path.abspath(getcwd()), relative_path)
             if not os.path.exists(dir_name):
                 print(f"No such file or directory: {dir_name}", file=stdout)
                 print(file=stdout)
@@ -456,6 +461,10 @@ class Ls(Command):
 
             if len(self.args) > 1:
                 print(f"{relative_path}:", file=stdout)
+
+            if os.path.isfile(dir_name):
+                print(relative_path, file=stdout)
+                continue
 
             for file_name in listdir(dir_name):
                 print(file_name, file=stdout)
