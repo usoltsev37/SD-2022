@@ -274,21 +274,33 @@ def test_execute_ls():
     cli = CLI()
     stdin = io.StringIO()
     stdout = io.StringIO()
-    cli.process(f'ls {os.path.join("..", ".github")}', stdin, stdout)
+    stdin.flush()
+    stdout.flush()
+    cli.process(f"ls {os.path.join('.', '.github')}", stdin, stdout)
     stdout.seek(0, 0)
     result = stdout.read()
     assert result == "workflows\n\n\n"
 
+def test_execute_ls_several_files():
+    cli = CLI()
+    stdin = io.StringIO()
+    stdout = io.StringIO()
+
+    first_dir = ".github"
+    second_dir = os.path.join(".github", "workflows")
+    cli.process(f'ls {first_dir} {second_dir}', stdin, stdout)
+    stdout.seek(0, 0)
+    result = stdout.read()
+    assert result == f"{first_dir}:\nworkflows\n\n{second_dir}:\npython-app.yml\n\n\n"
 
 def test_execute_cd():
     cli = CLI()
     stdin = io.StringIO()
     stdout = io.StringIO()
-    cli.process(f'cd {os.path.join("..", ".github")}', stdin, stdout)
+    cli.process(f'cd {os.path.join(".", ".github")}', stdin, stdout)
     stdout.seek(0, 0)
 
     assert os.getcwd() == os.path.join(sys.path[0], ".github")
-
 
 def test_execute_cd_without_args():
     cli = CLI()
@@ -298,16 +310,3 @@ def test_execute_cd_without_args():
     stdout.seek(0, 0)
 
     assert os.getcwd() == os.path.expanduser('~')
-
-
-def test_execute_ls_several_files():
-    cli = CLI()
-    stdin = io.StringIO()
-    stdout = io.StringIO()
-
-    first_dir = os.path.join("..", ".github")
-    second_dir = os.path.join("..", ".github", "workflows")
-    cli.process(f'ls {first_dir} {second_dir}', stdin, stdout)
-    stdout.seek(0, 0)
-    result = stdout.read()
-    assert result == f"{first_dir}:\nworkflows\n\n{second_dir}:\npython-app.yml\n\n\n"

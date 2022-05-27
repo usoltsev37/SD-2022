@@ -411,7 +411,7 @@ class Cd(Command):
 
     def execute(self, stdin, stdout):
         """
-        Function executes cd command to change currently directory to directory self.args[0]
+        Function executes cd command to change current directory to directory self.args[0]
         If there are no arguments, cd command changes current directory to directory sys.path[0]
         :param stdin: input stream
         :param stdout: output stream
@@ -448,7 +448,7 @@ class Ls(Command):
             self.args.append("")
 
         for relative_path in self.args:
-            dir_name = os.path.join(os.path.abspath(getcwd()), relative_path)
+            dir_name = os.path.join(getcwd(), relative_path)
             if not os.path.exists(dir_name):
                 print(f"No such file or directory: {dir_name}", file=stdout)
                 print(file=stdout)
