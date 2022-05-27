@@ -274,8 +274,6 @@ def test_execute_ls():
     cli = CLI()
     stdin = io.StringIO()
     stdout = io.StringIO()
-    stdin.flush()
-    stdout.flush()
     cli.process(f"ls {os.path.join('.', '.github')}", stdin, stdout)
     stdout.seek(0, 0)
     result = stdout.read()
@@ -319,13 +317,10 @@ def test_execute_cd():
     cli = CLI()
     stdin = io.StringIO()
     stdout = io.StringIO()
-    cli.process(f'cd {os.path.join(".", ".github")}', stdin, stdout)
+    cli.process(f'cd {os.path.abspath(".github")}', stdin, stdout)
     stdout.seek(0, 0)
 
     assert os.getcwd() == os.path.join(sys.path[0], ".github")
-
-    cli.process(f'cd {os.path.abspath(sys.path[0])}', stdin, stdout)
-    assert os.getcwd() == sys.path[0]
 
 def test_execute_cd_without_args():
     cli = CLI()
