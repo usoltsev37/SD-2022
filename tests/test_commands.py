@@ -302,6 +302,9 @@ def test_execute_cd():
 
     assert os.getcwd() == os.path.join(sys.path[0], ".github")
 
+    cli.process(f'cd {os.path.abspath(sys.path[0])}', stdin, stdout)
+    assert os.getcwd() == sys.path[0]
+
 def test_execute_cd_without_args():
     cli = CLI()
     stdin = io.StringIO()
