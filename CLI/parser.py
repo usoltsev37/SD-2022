@@ -13,7 +13,7 @@ class Parser:
         (Type.PIPE, r'\|'),
         (Type.DECLARATION, r'='),
         (Type.CLEAN_STRING, r'\'[^\']*\''),
-        (Type.STRING, r'(\"[^\"]*\")|([\w\-\.\!\@\?\#\$\%\^\&\/\*\(\)\-\+]+)'),
+        (Type.STRING, r'(\"[^\"]*\")|([\\\w\-\.\!\@\?\#\$\%\^\&\/\*\(\)\-\+]+)'),
         (Type.END, chr(0))
     ])
 
